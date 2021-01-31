@@ -1,0 +1,27 @@
+version: "3"
+services:
+    onbudget-mysql:
+        image: mysql:8.0.23
+        ports:
+            - 3307:3306
+        volumes:
+            - /opt/mysql/data:/var/lib/mysql
+        environment:
+            MYSQL_DATABASE: onBudget
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+            MYSQL_ROOT_PASSWORD: root
+    onbudget-wildfly:
+        build:
+            dockerfile: hello-wildfly.Dockerfile
+            context: .
+        depends_on:
+             - onbudget-mysql
+        ports:
+             - 8080:8080
+             - 9990:9990 
+
+        volumes:
+             - onbudget-logs:/opt/jboss/wildfly/standalone/logs
+volumes:
+    onbudget-logs:
